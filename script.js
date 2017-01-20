@@ -18,16 +18,52 @@ function findEl(el){
   }
 }
 
-$('#clean').onclick = function(){
-  console.log('click');
+$('#clean').onclick = function captureCss(){
+  formatCss($('#input').value.replace(/\n/g,''));
 }
 
+function formatCss(css){
+  var rules = createRulesArray(css);
+  rules = rules.filter(function(rule){
+    return !!rule[1]
+  })
+  rules = rules.sort();
+  rules = rules.map(function(rule){
 
-window.addEventListener('input', function(event) {
-  // console.log(captureInput(event));
-},false);
+    var props = rule[1].split(';')
 
-function captureInput(event){
-  return event.target.innerHTML;
+    props = props.filter(function(prop){
+      return !!prop
+    })
+
+    props = props.map(function(prop){
+      return '&nbsp;&nbsp;' + prop + ';<br>';
+    })
+
+    rule = [rule[0] + ' {<br>', props.join('') + '}<br><br>'];
+    return rule;
+  })
+
+  printCss(rules);
 }
 
+function createRulesArray(css){
+  css = css.split('}');
+  var rules = css.map(function(rule){
+    var selector = rule.split('{')[0];
+    var props = rule.split('{')[1];
+    return [selector, props];
+  })
+
+  return rules;
+}
+
+function printCss(rules){
+  var css = rules.map(function(rule){
+    return rule.join('');
+  })
+
+  css = css.join('');
+
+  $('#output').innerHTML = css;
+}

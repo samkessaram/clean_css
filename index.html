@@ -2,12 +2,46 @@
 <html lang="en">
 <head>
   <title>Clean CSS</title>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> -->
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div id="wrapper">
-  <div id="input" contenteditable="true">
-  </div>
+  <textarea id="input">#input, #output {
+  min-height: 400px;
+  width: 300px;
+  border: 1px solid black;
+  display: block;
+  text-align: left;
+}
+
+#input {
+  float: left;
+}
+
+#output {
+  float: right;
+}
+
+#clean {
+  display: inline-block;
+  clear: right;
+}
+
+#wrapper {
+  width: 800px;
+  text-align: center;
+  display: inline-block;
+}
+
+body, textarea, button {
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  text-align: center;
+}
+  </textarea>
   <button id="clean">Clean!</button>
   <div id="output">
   </div>

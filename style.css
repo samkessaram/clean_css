@@ -1,13 +1,13 @@
 #input, #output {
-  height: 400px;
+  min-height: 400px;
   width: 300px;
   border: 1px solid black;
   display: block;
+  text-align: left;
 }
 
 #input {
   float: left;
-  text-align: left;
 }
 
 #output {
@@ -25,6 +25,11 @@
   display: inline-block;
 }
 
+body, textarea, button {
+  font-family: 'Nunito', sans-serif;
+}
+
 body {
   text-align: center;
 }
+
