@@ -1,0 +1,30 @@
+#input, #output {
+  height: 400px;
+  width: 300px;
+  border: 1px solid black;
+  display: block;
+}
+
+#input {
+  float: left;
+  text-align: left;
+}
+
+#output {
+  float: right;
+}
+
+#clean {
+  display: inline-block;
+  clear: right;
+}
+
+#wrapper {
+  width: 800px;
+  text-align: center;
+  display: inline-block;
+}
+
+body {
+  text-align: center;
+}
