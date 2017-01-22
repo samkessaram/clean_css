@@ -19,43 +19,73 @@ function findEl(el){
 }
 
 $('#clean').onclick = function captureCss(){
-  formatCss($('#input').value.replace(/\n/g,''));
+  sortRules($('#input').value.replace(/\n/g,''));
 }
 
-function formatCss(css){
+function sortRules(css){
   var rules = createRulesArray(css);
-  rules = rules.filter(function(rule){
-    return !!rule[1]
+  rules = rules.filter(function(selector){
+    return !!selector[1]
   })
+  rules = sortProps(rules);
   rules = rules.sort();
+  rules = bringUpTypeSelectors(rules);
+  printCss(rules);
+}
+
+function bringUpTypeSelectors(rules){
+  var i = rules.findIndex(function(rule){
+    return rule[0].match(/^[a-z]/)
+  })
+  var typeSelectors = rules.slice(i,rules.length);
+  rules.splice(i,typeSelectors.length);
+  return typeSelectors.concat(rules);
+}
+
+function sortProps(rules){
   rules = rules.map(function(rule){
+    var key = rule[0].replace(/\s*,\s*/g,',\n');
+    var vals = rule[1].split(';');
 
-    var props = rule[1].split(';')
-
-    props = props.filter(function(prop){
-      return !!prop
+    vals = vals.filter(function(val){
+      val = val.replace(/\s/g,'');
+      return !!val
     })
 
-    props = props.map(function(prop){
-      return '&nbsp;&nbsp;' + prop + ';<br>';
+    vals = formatProps(vals).sort();
+
+    vals = vals.map(function(val){
+      return '  ' + val + ';\n';
     })
 
-    rule = [rule[0] + ' {<br>', props.join('') + '}<br><br>'];
+    rule = [key + ' {\n' + vals.join('') + '}\n\n'];
     return rule;
   })
 
-  printCss(rules);
+  return rules
+}
+
+function formatProps(props){
+  props = props.map(function(prop){
+    prop = prop.split(':');
+    prop = prop.map(function(keyVal){
+      return keyVal.trim();
+    })
+    prop = prop.join(': ');
+    return prop;
+  })
+  return props;
 }
 
 function createRulesArray(css){
   css = css.split('}');
-  var rules = css.map(function(rule){
-    var selector = rule.split('{')[0];
+  var selectors = css.map(function(rule){
+    var selector = rule.split('{')[0].trim();
     var props = rule.split('{')[1];
     return [selector, props];
   })
 
-  return rules;
+  return selectors;
 }
 
 function printCss(rules){
@@ -65,5 +95,5 @@ function printCss(rules){
 
   css = css.join('');
 
-  $('#output').innerHTML = css;
+  $('#output').value = css;
 }

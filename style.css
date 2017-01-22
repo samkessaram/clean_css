@@ -1,9 +1,10 @@
 #input, #output {
-  min-height: 400px;
+  height: 400px;
   width: 300px;
-  border: 1px solid black;
   display: block;
   text-align: left;
+  resize: none;
+  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
 }
 
 #input {

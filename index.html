@@ -7,44 +7,234 @@
 </head>
 <body>
 <div id="wrapper">
-  <textarea id="input">#input, #output {
-  min-height: 400px;
-  width: 300px;
-  border: 1px solid black;
-  display: block;
-  text-align: left;
-}
+  <textarea id="input">
+$primaryColor: #106e9a;
+$secondaryColor: #39CCCC;
 
-#input {
-  float: left;
-}
-
-#output {
-  float: right;
-}
-
-#clean {
-  display: inline-block;
-  clear: right;
-}
-
-#wrapper {
-  width: 800px;
-  text-align: center;
-  display: inline-block;
-}
-
-body, textarea, button {
-  font-family: 'Nunito', sans-serif;
+html {
+    -webkit-text-size-adjust: none;
 }
 
 body {
+    display: none;
+}
+
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6, 
+body {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 200;
+}
+
+header {
+  color: white;
+  /*background-color:  $secondaryColor;*/
+  background: linear-gradient(to right, $primaryColor, $secondaryColor);
+  box-shadow: 1px 1px 10px gray;
+  padding: 50px 0px;
   text-align: center;
+}
+
+p, li {
+  font-size: 1.25rem;
+}
+
+#about {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+#contact {
+  margin-bottom: 20px;
+}
+
+#home {
+  padding-top: 20px;
+}
+
+#info {
+  padding: 100px 0;
+}
+
+#job-title {
+  font-size: 2rem;
+}
+
+#name {
+  font-size: 3rem;
+}
+
+#nav {
+  cursor: pointer;
+  float: right;
+  position: relative;
+  top: -30px;
+}
+
+#screenshot img{
+  margin: 40px 0;
+}
+
+ul {
+  text-align: center;
+}
+
+li {
+  display: inline-block;
+  list-style: none;
+  margin-right: 30px;
+}
+
+#stack {
+  cursor: default;
+  margin-bottom: 3rem;
+}
+
+#stack h3 {
+  font-size: 1.25rem;
+}
+
+#stack li {
+  transition-duration: 0.5s;
+}
+
+#stack li:hover {
+  color: #1468a0;
+}
+
+#overlay {
+  background: #000;
+  display: none;
+  height: 100%;
+  opacity: .9;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 9;
+}
+
+#project-info {
+  margin-top: 50px;
+}
+
+#project-view {
+  display: none;
+  bottom:0;
+  color:#FFF;
+  left:100%;
+  overflow-x:hidden;
+  position:absolute;
+  right:0;
+  transition-duration:.2s;
+  transition-property:left;
+  width:0;
+  z-index:10;
+}
+
+.image-text {
+  position: absolute;
+  margin-top: 80px;
+}
+
+.project {
+  transition-property: filter;
+  transition-duration: 0.5s;
+}
+
+.project.filter {
+  filter: brightness(50%);
+}
+
+.project img {
+  box-shadow: 1px 1px 5px lightgrey;
+  cursor: pointer;
+}
+
+@media (max-width: 720px){
+  #contact {
+    margin-bottom: 100px;
+  }
+
+  header {
+    padding:0;
+    width:100%;
+  }
+
+  #info {
+    padding: 0;
+  }
+
+  #job-title {
+    font-size:1rem;
+  }
+
+  #job-title.fix {
+    display: none;
+  }
+
+  header.fix {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 43px;
+    box-shadow: 1px 1px 10px grey;
+  }
+
+  #home.fix {
+    padding-top: 95px;
+  }
+
+  #name {
+    font-size:2rem;
+    margin-bottom: 0;
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    z-index: 2;
+  }
+
+  #nav {
+    /*background-color:  $secondaryColor;*/
+    background: linear-gradient(to right, $primaryColor, $secondaryColor);
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 3;
+    width:100%;
+    height: 50px;
+  }
+
+  #nav ul {
+    clear:left;
+    float:left;
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+    left:50%;
+    text-align:center;
+  }
+
+  #nav li {
+    display: block;
+    float: left;
+    list-style: none;
+    margin: 8px 15px;
+    padding: 0;
+    position: relative;
+    right: 50%;
+  }
 }
   </textarea>
   <button id="clean">Clean!</button>
-  <div id="output">
-  </div>
+  <textarea id="output">
+  </textarea>
 </div>
 <script type="text/javascript" src="script.js"></script>
 </body>
