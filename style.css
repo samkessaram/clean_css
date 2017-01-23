@@ -1,6 +1,6 @@
 #input, #output {
-  height: 600px;
-  width: 500px;
+  height: 500px;
+  min-width: 500px;
   display: block;
   text-align: left;
   resize: none;
@@ -11,33 +11,39 @@
   float: left;
 }
 
+header {
+  font-size: 3rem;
+  text-align: left;
+  padding: 30px;
+}
+
+.row {
+  text-align: center;
+}
+
 #clean {
-  display: inline-block;
+ /* display: block;*/
 }
 
 #indent {
-  display: inline-block;
+  width: 50px;
 }
 
 #options {
-  width: 150px;
-  display: inline-block;
-  text-align: center;
+}
+
+#revert {
 }
 
 label {
-  display: block;
-  margin-top: 20px;
 }
 
 #wrapper {
-  width: 1000px;
-  text-align: center;
-  display: inline-block;
 }
 
 body, textarea, button {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 300;
 }
 
 body {
