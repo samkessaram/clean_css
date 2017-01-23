@@ -18,13 +18,16 @@ function findEl(el){
   }
 }
 
-$('#clean').onclick = function captureCss(){
-  $('#output').value = sortRules($('#input').value.replace(/\n/g,''));
+$('#clean').onclick = function(){
+  sortRules();
 }
 
-function sortRules(rawCss){
-  var sorted = sortMediaQueries(rawCss)
-  return sorted;
+$('#indent').onchange = function(){
+  sortRules();
+}
+
+function sortRules(){
+  $('#input').value = sortMediaQueries($('#input').value.replace(/\n/g,''));
 }
 
 function indent(){
@@ -32,8 +35,8 @@ function indent(){
   return indent;
 }
 
-function sortRulesSet(rawCss){
-  var rules = createRulesArray(rawCss);
+function sortRulesSet(rules){
+  rules = createRulesArray(rules);
   rules = sortProps(rules);
   rules = rules.sort();
   rules = bringUpTypeSelectors(rules);
@@ -47,10 +50,11 @@ function sortMediaQueries(rules){
   mediaRules = mediaRules.map(function(query,index){
     var rule = query.slice(query.indexOf('{')+1,query.length).trim();
     rule = rule.slice(0,rule.length-1);
-    query = query.slice(0,query.indexOf('{'))
+    query = query.slice(0,query.indexOf('{')).trim();
     var rulesSet = sortRulesSet(rule)
     rulesSet = rulesSet.replace(/\n/g,'\n' + indent());
     rulesSet = (rulesSet.substr(0,rulesSet.length - $('#indent').value - 1));
+
     return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
