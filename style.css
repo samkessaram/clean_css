@@ -16,8 +16,23 @@
 }
 
 #clean {
-  display: inline-block;
   clear: right;
+  display: inline-block;
+}
+
+#indent {
+  display: inline-block;
+}
+
+#options {
+  width: 150px;
+  display: inline-block;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 20px;
 }
 
 #wrapper {

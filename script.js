@@ -23,7 +23,13 @@ $('#clean').onclick = function captureCss(){
 }
 
 function sortRules(rawCss){
-  return sortMediaSpecificRules(rawCss);
+  var sorted = sortMediaQueries(rawCss)
+  return sorted;
+}
+
+function indent(){
+  var indent = ' '.repeat($('#indent').value);
+  return indent;
 }
 
 function sortRulesSet(rawCss){
@@ -34,7 +40,7 @@ function sortRulesSet(rawCss){
   return rules.join('\n');
 }
 
-function sortMediaSpecificRules(rules){
+function sortMediaQueries(rules){
   rules = rules.split('@');
   var noMediaRules = sortRulesSet(rules[0]);
   var mediaRules = rules.slice(1,rules.length);
@@ -42,7 +48,10 @@ function sortMediaSpecificRules(rules){
     var rule = query.slice(query.indexOf('{')+1,query.length).trim();
     rule = rule.slice(0,rule.length-1);
     query = query.slice(0,query.indexOf('{'))
-    return '\n@' + query + ' {\n' + sortRulesSet(rule) + '}\n';
+    var rulesSet = sortRulesSet(rule)
+    console.log(rulesSet)
+    rulesSet = rulesSet.replace(/\n/g,'\n' + indent());
+    return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
   return noMediaRules + mediaRules.join('');
@@ -71,10 +80,10 @@ function sortProps(rules){
     vals = formatProps(vals).sort();
 
     vals = vals.map(function(val){
-      return '  ' + val + ';\n';
+      return indent() + val + ';\n';
     })
 
-    rule = key + ' {\n' + vals.join('') + '}\n';
+    rule = key + ' {\n' + vals.join('') + '}';
 
     return rule;
   })

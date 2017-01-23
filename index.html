@@ -104,7 +104,16 @@ body {
   }
 }
   </textarea>
-  <button id="clean">Clean!</button>
+  <div id="options">
+    <button id="clean">»Clean»</button>
+    <label for="indent">Indent:</label>
+    <select name="indent" id="indent">
+      <option value="1">1</option>
+      <option selected value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </div>
   <textarea id="output">
   </textarea>
 </div>
