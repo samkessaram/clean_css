@@ -44,13 +44,13 @@ function sortMediaQueries(rules){
   rules = rules.split('@');
   var noMediaRules = sortRulesSet(rules[0]);
   var mediaRules = rules.slice(1,rules.length);
-  mediaRules = mediaRules.map(function(query){
+  mediaRules = mediaRules.map(function(query,index){
     var rule = query.slice(query.indexOf('{')+1,query.length).trim();
     rule = rule.slice(0,rule.length-1);
     query = query.slice(0,query.indexOf('{'))
     var rulesSet = sortRulesSet(rule)
-    console.log(rulesSet)
     rulesSet = rulesSet.replace(/\n/g,'\n' + indent());
+    rulesSet = (rulesSet.substr(0,rulesSet.length - $('#indent').value - 1));
     return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
@@ -83,7 +83,7 @@ function sortProps(rules){
       return indent() + val + ';\n';
     })
 
-    rule = key + ' {\n' + vals.join('') + '}';
+    rule = key + ' {\n' + vals.join('') + '}\n';
 
     return rule;
   })
