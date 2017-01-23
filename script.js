@@ -32,10 +32,6 @@ $('#revert').onclick = function(){
   $('#input').value = uglyCss || $('#input').value;
 }
 
-$('#rm-whitespace').onclick = function(){
-  $('#input').value = $('#input').value.replace(/\s/g,'');
-}
-
 function sortRules(){
   uglyCss = uglyCss || $('#input').value;
   $('#input').value = sortMediaQueries($('#input').value.replace(/\n/g,''));
