@@ -19,24 +19,40 @@ function findEl(el){
 }
 
 $('#clean').onclick = function captureCss(){
-  sortRules($('#input').value.replace(/\n/g,''));
+  $('#output').value = sortRules($('#input').value.replace(/\n/g,''));
 }
 
-function sortRules(css){
-  var rules = createRulesArray(css);
-  rules = rules.filter(function(selector){
-    return !!selector[1]
-  })
+function sortRules(rawCss){
+  return sortMediaSpecificRules(rawCss);
+}
+
+function sortRulesSet(rawCss){
+  var rules = createRulesArray(rawCss);
   rules = sortProps(rules);
   rules = rules.sort();
   rules = bringUpTypeSelectors(rules);
-  printCss(rules);
+  return rules.join('\n');
+}
+
+function sortMediaSpecificRules(rules){
+  rules = rules.split('@');
+  var noMediaRules = sortRulesSet(rules[0]);
+  var mediaRules = rules.slice(1,rules.length);
+  mediaRules = mediaRules.map(function(query){
+    var rule = query.slice(query.indexOf('{')+1,query.length).trim();
+    rule = rule.slice(0,rule.length-1);
+    query = query.slice(0,query.indexOf('{'))
+    return '\n@' + query + ' {\n' + sortRulesSet(rule) + '}\n';
+  })
+
+  return noMediaRules + mediaRules.join('');
 }
 
 function bringUpTypeSelectors(rules){
   var i = rules.findIndex(function(rule){
     return rule[0].match(/^[a-z]/)
   })
+
   var typeSelectors = rules.slice(i,rules.length);
   rules.splice(i,typeSelectors.length);
   return typeSelectors.concat(rules);
@@ -58,7 +74,8 @@ function sortProps(rules){
       return '  ' + val + ';\n';
     })
 
-    rule = [key + ' {\n' + vals.join('') + '}\n\n'];
+    rule = key + ' {\n' + vals.join('') + '}\n';
+
     return rule;
   })
 
@@ -85,15 +102,9 @@ function createRulesArray(css){
     return [selector, props];
   })
 
-  return selectors;
-}
-
-function printCss(rules){
-  var css = rules.map(function(rule){
-    return rule.join('');
+  selectors = selectors.filter(function(selector){
+    return !!selector[1]
   })
 
-  css = css.join('');
-
-  $('#output').value = css;
+  return selectors;
 }
