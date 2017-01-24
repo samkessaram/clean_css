@@ -29,27 +29,28 @@ $('#indent').onchange = function(){
 }
 
 $('#revert').onclick = function(){
-  $('#input').value = uglyCss || $('#input').value;
+  $('#textarea').value = uglyCss || $('#textarea').value;
 }
 
 $('#rm-whitespace').onclick = function(){
-  $('#input').value = $('#input').value.replace(/\n/g,'');
+  $('#textarea').value = $('#textarea').value.replace(/\n/g,'');
+}
+
+$('#copy').onclick = function(){
+  $('#textarea').select();
+  document.execCommand('copy');
 }
 
 function cutComments(rules){
-  rules = rules.split('/*');
-  rules = rules.map(function(rule){
-    return rule.slice(rule.indexOf('*/') + 2 ,rule.length)
-  })
-  return rules.join('');
+
 }
 
 function sortRules(){
-  var rules = $('#input').value;
+  var rules = $('#textarea').value;
   uglyCss = uglyCss || rules;
   rules = rules.replace(/\n/g,'');
-  rules = cutComments(rules);
-  $('#input').value = sortMediaQueries(rules);
+  // rules = cutComments(rules);
+  $('#textarea').value = sortMediaQueries(rules);
 }
 
 function indent(){
@@ -93,23 +94,58 @@ function bringUpTypeSelectors(rules){
   return typeSelectors.concat(rules);
 }
 
+function separateProps(props){
+  if ( props.includes('/*')){
+    splitProps = preservePropComments(props);
+  } else {
+    props = props.split(';');
+    splitProps = props.filter(function(prop){
+      prop = prop.replace(/\s/g,'');
+      return !!prop
+    })
+  }
+
+  return splitProps; 
+}
+
+function preservePropComments(props){
+  var splitProps = [];
+  while ( props.includes('/*')){
+    var match = props.match(/\w+:\s*\w+;\s*\/\*.+\*\//)
+    var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
+    splitProps.push(comment);
+    props = props.replace(comment,'');
+  }
+
+  splitProps = splitProps.map(function(prop){
+    pair = [];
+    pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
+    pair[1] = prop.substring(prop.indexOf(':',0),prop.length).trim()
+    return pair;
+  })
+
+  return splitProps.concat(props);
+
+}
+
+
 function sortProps(rules){
   rules = rules.map(function(rule){
     var key = rule[0].replace(/\s*,\s*/g,',\n');
-    var vals = rule[1].split(';');
+    var props = separateProps(rule[1]);
 
-    vals = vals.filter(function(val){
-      val = val.replace(/\s/g,'');
-      return !!val
+    props = formatProps(props)
+
+    props = props.sort();
+
+    props = props.map(function(prop){
+      if (!!prop){
+        return indent() + prop + ';\n';
+      }
+      
     })
 
-    vals = formatProps(vals).sort();
-
-    vals = vals.map(function(val){
-      return indent() + val + ';\n';
-    })
-
-    rule = key + ' {\n' + vals.join('') + '}\n';
+    rule = key + ' {\n' + props.join('') + '}\n';
 
     return rule;
   })
@@ -118,15 +154,26 @@ function sortProps(rules){
 }
 
 function formatProps(props){
+  var allProps = [];
   props = props.map(function(prop){
-    prop = prop.split(':');
-    prop = prop.map(function(keyVal){
-      return keyVal.trim();
-    })
-    prop = prop.join(': ');
+    if ( typeof prop === 'string'){
+      prop = prop.split(':');
+      prop = prop.map(function(propValPair){
+        return propValPair.trim();
+      })
+      prop = prop.join(': ');
+      prop = prop.split(';');
+      prop.forEach(function(prop){
+        allProps.push(prop.trim());
+      })
+    } else {
+      allProps.push(prop.join(''));
+
+    }
     return prop;
   })
-  return props;
+  console.log(allProps)
+  return allProps;
 }
 
 function createRulesArray(css){
@@ -138,7 +185,7 @@ function createRulesArray(css){
   })
 
   selectors = selectors.filter(function(selector){
-    return !!selector[1]
+    return !!selector[1]  // Filters out empty rules
   })
 
   return selectors;

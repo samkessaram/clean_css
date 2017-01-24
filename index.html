@@ -8,35 +8,24 @@
 
 <header>Clean CSS</header>
 <div id="container">
-  <textarea id="input">
+  <textarea id="textarea">
 
-#input, #output {  
-  height: 500px;  
-  min-width: 500px; 
-   display: block;  
-   text-align: left;  
-   resize: none;  
-   overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
-   }
- #input {  
+
+#input {
+  height: 500px;
+  min-width: 600px;
+  different: scroll; /* DIFF COMMt some weird Mac bug that deletes a floated textarea on *input* */
+  display: inline-block;
+  text-align: left;
+  resize: none;
+  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
   float: left;
-  }
+  font-family: monospace;
+  testCommentProp: testValue; /* Test commented out text */
+  font-size: 1rem;
+}
 
-  header {  
-    font-size: 3rem;  
-    text-align: left;  
-    padding: 30px;
-    }
 
-  .row {  
-    text-align: center;
-    }
-
-  #clean {
-   /* display: block;*/
-   }
-
-   #indent {  width: 50px;}#options {}#revert {}label {}ul li {  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;  font-weight: 300;}#wrapper {}body, textarea, button {  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;  font-weight: 300;}body {  text-align: center;}
   </textarea>
 
   <div id="options">
@@ -48,6 +37,7 @@
     <button id="clean">Clean</button>
     <button id="revert">Revert</button>
     <button id="rm-whitespace">No New Lines</button>
+    <button id="copy">Copy</button>
   </div>
 </div>
 <script type="text/javascript" src="script.js"></script>

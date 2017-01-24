@@ -1,20 +1,21 @@
 /* (Clean)CSS */
 
-#input {
+textarea {
   height: 500px;
-  min-width: 500px;
+  min-width: 600px;
   display: inline-block;
   text-align: left;
   resize: none;
   overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
   float: left;
   font-family: monospace;
+  font-size: 1rem;
 }
 
 header {
   font-size: 3rem;
   text-align: left;
-  width: 90%;
+  width: 900px;
   display: inline-block;
   padding:20px 0;
 }
@@ -26,7 +27,6 @@ header {
 #indent {
   width: 50px;
   margin-left: 15px;
-  margin-bottom: 5px;
 }
 
 #options {
@@ -48,12 +48,16 @@ ul li {
 #container {
   text-align: center;
   display: inline-block;
-  width: 90%;
+  width: 900px;
 }
 
 body, button {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: 300;
+}
+
+button {
+  margin-top: 5px;
 }
 
 body {
