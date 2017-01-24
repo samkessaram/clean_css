@@ -2,30 +2,54 @@
 <html lang="en">
 <head>
   <title>Clean CSS</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/foundation/6.2.4-rc2/foundation.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
-<div class="container">
-<div class="row"><header>Xyz</header></div>
-<div class="row">
-  <textarea class="small-6 columns" id="input">
-    body{display:none;}html{-webkit-text-size-adjust:none;}#id{nothing:doing;}.random-class{is:100xugly;wow:this;}@media(max-width:720px){#nav{*/background:linear-gradient(toright,$primaryColor,$secondaryColor);/*background-color:$secondaryColor;height:50px;left:0;position:fixed;right:0;width:100%;z-index:3;}#navli{display:block;float:left;list-style:none;margin:8px15px;padding:0;position:relative;right:50%;}#nav ul{clear:left;float:left;left:50%;list-style:none;margin:0;padding:0;position:relative;text-align:center;}}
+<header>Clean CSS</header>
+<div id="container">
+  <textarea id="input">
+
+#input, #output {  
+  height: 500px;  
+  min-width: 500px; 
+   display: block;  
+   text-align: left;  
+   resize: none;  
+   overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
+   }
+ #input {  
+  float: left;
+  }
+
+  header {  
+    font-size: 3rem;  
+    text-align: left;  
+    padding: 30px;
+    }
+
+  .row {  
+    text-align: center;
+    }
+
+  #clean {
+   /* display: block;*/
+   }
+
+   #indent {  width: 50px;}#options {}#revert {}label {}ul li {  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;  font-weight: 300;}#wrapper {}body, textarea, button {  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;  font-weight: 300;}body {  text-align: center;}
   </textarea>
-  <div id="options" class="small-6 columns">
-    <button class="button" id="clean">Clean</button>
-    <button class="button" id="revert">Uglify</button>
-    <label for="indent">Indent:</label>
+
+  <div id="options">
+    <label for="indent">Indent (spaces):</label>
     <select name="indent" id="indent">
-      <option value="1">1</option>
       <option selected value="2">2</option>
-      <option value="3">3</option>
       <option value="4">4</option>
     </select>
-
+    <button id="clean">Clean</button>
+    <button id="revert">Revert</button>
+    <button id="rm-whitespace">No New Lines</button>
   </div>
-</div></div>
+</div>
 <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

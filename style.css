@@ -1,35 +1,37 @@
-#input, #output {
+/* (Clean)CSS */
+
+#input {
   height: 500px;
   min-width: 500px;
-  display: block;
+  display: inline-block;
   text-align: left;
   resize: none;
   overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
-}
-
-#input {
   float: left;
+  font-family: monospace;
 }
 
 header {
   font-size: 3rem;
   text-align: left;
-  padding: 30px;
+  width: 90%;
+  display: inline-block;
+  padding:20px 0;
 }
 
 .row {
   text-align: center;
 }
 
-#clean {
- /* display: block;*/
-}
-
 #indent {
   width: 50px;
+  margin-left: 15px;
+  margin-bottom: 5px;
 }
 
 #options {
+  width: 200px;
+  display: inline-block;
 }
 
 #revert {
@@ -38,10 +40,18 @@ header {
 label {
 }
 
-#wrapper {
+ul li {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 300;
 }
 
-body, textarea, button {
+#container {
+  text-align: center;
+  display: inline-block;
+  width: 90%;
+}
+
+body, button {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: 300;
 }
@@ -49,4 +59,3 @@ body, textarea, button {
 body {
   text-align: center;
 }
-

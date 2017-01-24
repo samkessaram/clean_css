@@ -32,9 +32,24 @@ $('#revert').onclick = function(){
   $('#input').value = uglyCss || $('#input').value;
 }
 
+$('#rm-whitespace').onclick = function(){
+  $('#input').value = $('#input').value.replace(/\n/g,'');
+}
+
+function cutComments(rules){
+  rules = rules.split('/*');
+  rules = rules.map(function(rule){
+    return rule.slice(rule.indexOf('*/') + 2 ,rule.length)
+  })
+  return rules.join('');
+}
+
 function sortRules(){
-  uglyCss = uglyCss || $('#input').value;
-  $('#input').value = sortMediaQueries($('#input').value.replace(/\n/g,''));
+  var rules = $('#input').value;
+  uglyCss = uglyCss || rules;
+  rules = rules.replace(/\n/g,'');
+  rules = cutComments(rules);
+  $('#input').value = sortMediaQueries(rules);
 }
 
 function indent(){
