@@ -109,14 +109,21 @@ function separateProps(props){
 }
 
 function preservePropComments(props){
+
   var splitProps = [];
   while ( props.includes('/*')){
-    var match = props.match(/\w+:\s*\w+;\s*\/\*.+\*\//)
+    var match = props.match(/\/\*.+\*\//)
+
     var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
+
+    if (!comment.match(/.+:.+;/)) {
+      comment = props.match(/-?\w+:\s*\w+;\s*\/\*.+\*\//)[0];
+    }
+
     splitProps.push(comment);
     props = props.replace(comment,'');
   }
-
+  
   splitProps = splitProps.map(function(prop){
     pair = [];
     pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
@@ -136,12 +143,35 @@ function sortProps(rules){
 
     props = formatProps(props)
 
-    props = props.sort();
+    props = props.filter(function(prop){
+      if (!!prop){
+        return prop;
+      }
+    })
+
+    props = props.sort(function(a,b){
+      if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
+        return -1
+      }
+
+      if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
+        return 1
+      }
+
+      if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
+        return 0
+      }
+    });
 
     props = props.map(function(prop){
-      if (!!prop){
-        return indent() + prop + ';\n';
-      }
+
+        prop = indent() + prop;
+        if ( prop.includes('/*')){
+          return prop + '\n'
+        } else {
+          return prop + ';\n';
+        } 
+
       
     })
 
@@ -172,7 +202,7 @@ function formatProps(props){
     }
     return prop;
   })
-  console.log(allProps)
+
   return allProps;
 }
 
