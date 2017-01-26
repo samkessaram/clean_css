@@ -41,9 +41,8 @@ $('#copy').onclick = function(){
   document.execCommand('copy');
 }
 
-function cutComments(rules){
-
-}
+// function cutComments(rules){
+// }
 
 function sortRules(){
   var rules = $('#textarea').value;
@@ -58,18 +57,120 @@ function indent(){
   return indent;
 }
 
-function sortRulesSet(rules){
+function splitRules(rules){
   rules = createRulesArray(rules);
+  return trimRules(rules)
+}
+
+function indentRules(rules){
+  rules = splitRules(rules);
+  rules = joinRules(rules);
+  return rules.join('\n');
+}
+
+function sortRulesSet(rules){
+  rules = splitRules(rules)
   rules = sortProps(rules);
+  rules = joinRules(rules);
   rules = rules.sort();
   rules = bringUpTypeSelectors(rules);
 
   return rules.join('\n');
 }
 
+function createRulesArray(css){
+  // console.log(css.match(/\/\*.+\*\//));
+  css = css.split('}');
+  var selectors = css.map(function(rule){
+    var selector = rule.split('{')[0].trim();
+    var props = rule.split('{')[1];
+    return [selector, props];
+  })
+
+  selectors = selectors.filter(function(selector){
+    return !!selector[1]
+  })
+
+  return selectors;
+}
+
+function sortProps(rules){
+  rules = rules.map(function(rule){
+    var selector = rule[0];
+    var props = rule[1];
+
+    props = props.sort(function(a,b){
+      if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
+        return -1
+      }
+      if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
+        return 1
+      }
+      if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
+        return 0
+      }
+    });
+
+    return rule;
+  })
+
+  return rules;
+}
+
+function joinRules(rules){
+  rules = rules.map(function(rule){
+    var selector = rule[0];
+    var props = rule[1];
+    props = props.map(function(prop){
+      prop = indent() + prop;
+      if ( prop.includes('/*')){
+        return prop + '\n'
+      } else {
+        return prop + ';\n';
+      }  
+    })
+
+    rule = selector + ' {\n' + props.join('') + '}\n';
+
+    return rule;
+  })
+
+  return rules
+}
+
+function trimRules(rules){
+  rules = rules.map(function(rule){
+    var selector = rule[0].replace(/\s*,\s*/g,',\n');
+    var props = trimProps(rule[1]);
+
+    return [selector, props]
+  })
+
+  return rules
+}
+
+function trimProps(props){
+  props = props.split(';')
+  props = props.map(function(pair){
+    pair = pair.split(':');
+    pair = pair.map(function(half){
+      return half.trim()
+    })
+    return pair.join(': ')
+  })
+
+  props = props.filter(function(prop){
+    if (!!prop){
+      return prop;
+    }
+  })
+
+  return props;
+}
+
 function seperateMediaQueries(rules){
   rules = rules.split('@');
-  var noMediaRules = sortRulesSet(rules[0]);
+  var noMediaRules = rules[0];
   var mediaRules = rules.slice(1,rules.length);
 
   mediaRules = mediaRules.map(function(query,index){
@@ -83,7 +184,7 @@ function seperateMediaQueries(rules){
     return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
-  return noMediaRules + mediaRules.join('');
+  return sortRulesSet(noMediaRules) + mediaRules.join('');
 }
 
 function bringUpTypeSelectors(rules){
@@ -144,90 +245,3 @@ function preservePropComments(props){
 
 }
 
-
-function sortProps(rules){
-  rules = rules.map(function(rule){
-    var key = rule[0].replace(/\s*,\s*/g,',\n');
-    var props = separateProps(rule[1]);
-
-    props = formatProps(props)
-
-    props = props.filter(function(prop){
-      if (!!prop){
-        return prop;
-      }
-    })
-
-    props = props.sort(function(a,b){
-      if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
-        return -1
-      }
-
-      if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
-        return 1
-      }
-
-      if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
-        return 0
-      }
-    });
-
-    props = props.map(function(prop){
-
-        prop = indent() + prop;
-        if ( prop.includes('/*')){
-          return prop + '\n'
-        } else {
-          return prop + ';\n';
-        } 
-
-      
-    })
-
-    rule = key + ' {\n' + props.join('') + '}\n';
-
-    return rule;
-  })
-
-  return rules
-}
-
-function formatProps(props){
-  var allProps = [];
-
-  props = props.map(function(prop){
-    if ( typeof prop === 'string'){
-      prop = prop.split(':');
-      prop = prop.map(function(propValPair){
-        return propValPair.trim();
-      })
-      prop = prop.join(': ');
-      prop = prop.split(';');
-      prop.forEach(function(prop){
-        allProps.push(prop.trim());
-      })
-    } else {
-      allProps.push(prop.join(''));
-
-    }
-    return prop;
-  })
-
-  return allProps;
-}
-
-function createRulesArray(css){
-  // console.log(css.match(/\/\*.+\*\//));
-  css = css.split('}');
-  var selectors = css.map(function(rule){
-    var selector = rule.split('{')[0].trim();
-    var props = rule.split('{')[1];
-    return [selector, props];
-  })
-
-  selectors = selectors.filter(function(selector){
-    return !!selector[1]  // Filters out empty rules
-  })
-
-  return selectors;
-}
