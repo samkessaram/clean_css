@@ -8,23 +8,67 @@
 
 <header>Clean CSS</header>
 <div id="container">
-  <textarea id="textarea">
+  <textarea id="textarea">body {
+  display: none;
+  background-color: #d7f0ea;
+}
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+body {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 200; /* font weight comment here */
+}
 
-#textarea {
-  height: 500px;
-  min-width: 600px;
+/* commenting out the whole header 
+header {
+  background: linear-gradient(to right, $primaryColor, $secondaryColor);
+  box-shadow: 1px 1px 10px gray;
+  color: $headlineTextColor;
+  padding: 50px 0px;
+  text-align: center;
+}
+
+*/
+
+html {
+  -webkit-text-size-adjust: none;
+}
+
+li {
   display: inline-block;
-  text-align: left;
-  /*resize: none;*/
-  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
-  float: left;
-  font-family: monospace;
-  font-size: 1rem;
+  list-style: none;
+  margin-right: 30px;
+}
+
+p,
+li {
+  font-size: 1.25rem;
+}
+
+ul {
+  text-align: center;
 }
 
 
-  </textarea>
+@media {
+#home {
+  padding-top: 20px;
+}
+
+#about {
+  margin-bottom: 3rem;
+  margin-top: 2rem;
+}
+
+#contact {
+  margin-bottom: 20px;
+}}
+</textarea>
 
   <div id="options">
     <label for="indent">Indent (spaces):</label>

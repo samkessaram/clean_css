@@ -24,8 +24,8 @@ $('#clean').onclick = function(){
   sortRules();
 }
 
-$('#indent').onchange = function(){
-  sortRules();
+$('#indent').onchange = function(){ // change this to only auto adjust indent after initial sort 
+  sortRules();                      
 }
 
 $('#revert').onclick = function(){
@@ -50,7 +50,7 @@ function sortRules(){
   uglyCss = uglyCss || rules;
   rules = rules.replace(/\n/g,'');
   // rules = cutComments(rules);
-  $('#textarea').value = sortMediaQueries(rules);
+  $('#textarea').value = seperateMediaQueries(rules);
 }
 
 function indent(){
@@ -63,13 +63,15 @@ function sortRulesSet(rules){
   rules = sortProps(rules);
   rules = rules.sort();
   rules = bringUpTypeSelectors(rules);
+
   return rules.join('\n');
 }
 
-function sortMediaQueries(rules){
+function seperateMediaQueries(rules){
   rules = rules.split('@');
   var noMediaRules = sortRulesSet(rules[0]);
   var mediaRules = rules.slice(1,rules.length);
+
   mediaRules = mediaRules.map(function(query,index){
     var rule = query.slice(query.indexOf('{')+1,query.length).trim();
     rule = rule.slice(0,rule.length-1);
@@ -89,23 +91,28 @@ function bringUpTypeSelectors(rules){
     return rule[0].match(/^[a-z]/)
   })
 
-  var typeSelectors = rules.slice(i,rules.length);
-  rules.splice(i,typeSelectors.length);
-  return typeSelectors.concat(rules);
+  if ( i > -1 ){
+    var typeSelectors = rules.slice(i,rules.length);
+    rules.splice(i,typeSelectors.length);
+    return typeSelectors.concat(rules);
+  } else {
+    return rules
+  }
+  
 }
 
 function separateProps(props){
   if ( props.includes('/*')){
-    splitProps = preservePropComments(props);
+    props = preservePropComments(props);
   } else {
     props = props.split(';');
-    splitProps = props.filter(function(prop){
+    props = props.filter(function(prop){
       prop = prop.replace(/\s/g,'');
       return !!prop
     })
   }
 
-  return splitProps; 
+  return props; 
 }
 
 function preservePropComments(props){
@@ -117,13 +124,15 @@ function preservePropComments(props){
     var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
 
     if (!comment.match(/.+:.+;/)) {
-      comment = props.match(/-?\w+:\s*\w+;\s*\/\*.+\*\//)[0];
+      if(props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)){
+        comment = props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)[0].split('*/')[0] + '*/';
+      }
     }
 
     splitProps.push(comment);
     props = props.replace(comment,'');
   }
-  
+
   splitProps = splitProps.map(function(prop){
     pair = [];
     pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
@@ -185,6 +194,7 @@ function sortProps(rules){
 
 function formatProps(props){
   var allProps = [];
+
   props = props.map(function(prop){
     if ( typeof prop === 'string'){
       prop = prop.split(':');
@@ -207,6 +217,7 @@ function formatProps(props){
 }
 
 function createRulesArray(css){
+  // console.log(css.match(/\/\*.+\*\//));
   css = css.split('}');
   var selectors = css.map(function(rule){
     var selector = rule.split('{')[0].trim();

@@ -1,58 +1,9 @@
-/* (Clean)CSS */
-
-#textarea {
-  height: 500px;
-  min-width: 600px;
-  display: inline-block;
-  text-align: left;
-  /*resize: none;*/
-  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
-  float: left;
-  font-family: monospace;
-  font-size: 1rem;
-}
-
-header {
-  font-size: 3rem;
-  text-align: left;
-  width: 900px;
-  display: inline-block;
-  padding:20px 0;
-}
-
-.row {
+body {
   text-align: center;
 }
 
-#indent {
-  width: 50px;
-  margin-left: 15px;
-}
-
-#options {
-  width: 200px;
-  display: inline-block;
-  margin-top: 20px;
-}
-
-#revert {
-}
-
-label {
-}
-
-ul li {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  font-weight: 300;
-}
-
-#container {
-  text-align: center;
-  display: inline-block;
-  width: 900px;
-}
-
-body, button {
+body,
+button {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: 300;
 }
@@ -61,6 +12,48 @@ button {
   margin-top: 5px;
 }
 
-body {
+header {
+  display: inline-block;
+  font-size: 3rem;
+  padding: 20px 0;
+  text-align: left;
+  width: 900px;
+}
+
+ul li {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 300;
+}
+
+#container {
+  display: inline-block;
+  text-align: center;
+  width: 900px;
+}
+
+#indent {
+  margin-left: 15px;
+  width: 50px;
+}
+
+#options {
+  display: inline-block;
+  margin-top: 20px;
+  width: 200px;
+}
+
+#textarea {
+  display: inline-block;
+  float: left;
+  font-family: monospace;
+  font-size: 1rem;
+  height: 500px;
+  min-width: 600px;
+  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
+  /*resize: none;*/
+  text-align: left;
+}
+
+.row {
   text-align: center;
 }
