@@ -33,6 +33,7 @@ $('#revert').onclick = function(){
 }
 
 $('#rm-whitespace').onclick = function(){
+  uglyCss = uglyCss || $('#textarea').value;
   $('#textarea').value = $('#textarea').value.replace(/\n/g,'');
 }
 
@@ -41,15 +42,27 @@ $('#copy').onclick = function(){
   document.execCommand('copy');
 }
 
-// function cutComments(rules){
-// }
-
 function sortRules(){
   var rules = $('#textarea').value;
   uglyCss = uglyCss || rules;
   rules = rules.replace(/\n/g,'');
-  // rules = cutComments(rules);
-  $('#textarea').value = seperateMediaQueries(rules);
+  rules = separateMediaQueries(rules);
+
+  var media = handleComments(rules.media)
+  var mediaComments = media.comments;
+
+  var nonMedia = handleComments(rules.nonMedia)
+  var nonMediaComments = nonMedia.comments;
+
+  rules = sortRulesSet(nonMedia.rules) + sortMediaRules(media.rules);
+  insertComments(rules, mediaComments.concat(nonMediaComments))
+
+  // console.log(nonMedia.match(/\/\*.commenting out font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif[^*/]+\*\//))
+  $('#textarea').value = rules;
+}
+
+function insertComments(rules, comments){
+  console.log(comments)
 }
 
 function indent(){
@@ -79,19 +92,61 @@ function sortRulesSet(rules){
 }
 
 function createRulesArray(css){
-  // console.log(css.match(/\/\*.+\*\//));
   css = css.split('}');
-  var selectors = css.map(function(rule){
+
+  var rules = css.map(function(rule){
     var selector = rule.split('{')[0].trim();
     var props = rule.split('{')[1];
     return [selector, props];
   })
 
-  selectors = selectors.filter(function(selector){
+  rules = rules.filter(function(selector){
     return !!selector[1]
   })
 
-  return selectors;
+  return rules;
+}
+
+// \/\*[^*/]+\*\/ -- catches non-bracketed comments
+
+// \/\*[^*/]+{(.*?)}(.*?)\*\/ -- catches commented rules
+
+// {[^}]+\/\*[^*/]+\*\/[^/*]+ -- catches comments in brackets
+
+
+
+function handleComments(rules){
+  var rulesCopy = rules;
+  var propComments = [];
+  var lonerComments = [];
+  var familyComments = [];
+
+  while ( rules.indexOf('/*') > 0  ){
+    var lonerCom = rules.match(/\/\*[^*/]+\*\//);
+    var familyCom = rules.match(/\/\*[^*/]+{(.*?)}(.*?)\*\//);
+    var propCom = rules.match(/{[^}]+\/\*[^*/]+\*\/[^/*]+/);
+
+
+    if (!!lonerCom){
+      rules = rules.replace(lonerCom[0],'')
+      rulesCopy = rulesCopy.replace(lonerCom[0],'');
+    } 
+
+    if ( !!familyCom ){
+      familyComments.push(familyCom[0]);
+      rules = rules.replace(familyCom[0],'');
+      rulesCopy = rulesCopy.replace(familyCom[0],'');
+    }
+
+    if (!!propCom) {
+      propComments.push(propCom);
+      rules = rules.replace(propCom[0],'');
+      rulesCopy = rulesCopy.replace(propCom[0],'');
+    }
+  }
+
+  return { 'rules':rulesCopy, 'comments':propComments}
+  
 }
 
 function sortProps(rules){
@@ -168,12 +223,16 @@ function trimProps(props){
   return props;
 }
 
-function seperateMediaQueries(rules){
+function separateMediaQueries(rules){
   rules = rules.split('@');
   var noMediaRules = rules[0];
   var mediaRules = rules.slice(1,rules.length);
 
-  mediaRules = mediaRules.map(function(query,index){
+  return { 'nonMedia': noMediaRules, 'media': mediaRules }
+}
+
+function sortMediaRules(rules){
+  rules = rules.map(function(query,index){
     var rule = query.slice(query.indexOf('{')+1,query.length).trim();
     rule = rule.slice(0,rule.length-1);
     query = query.slice(0,query.indexOf('{')).trim();
@@ -184,7 +243,7 @@ function seperateMediaQueries(rules){
     return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
-  return sortRulesSet(noMediaRules) + mediaRules.join('');
+  return rules.join('');
 }
 
 function bringUpTypeSelectors(rules){
@@ -202,46 +261,32 @@ function bringUpTypeSelectors(rules){
   
 }
 
-function separateProps(props){
-  if ( props.includes('/*')){
-    props = preservePropComments(props);
-  } else {
-    props = props.split(';');
-    props = props.filter(function(prop){
-      prop = prop.replace(/\s/g,'');
-      return !!prop
-    })
-  }
+// function preservePropComments(props){
 
-  return props; 
-}
+//   var splitProps = [];
+//   while ( props.includes('/*')){
+//     var match = props.match(/\/\*.+\*\//)
 
-function preservePropComments(props){
+//     var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
 
-  var splitProps = [];
-  while ( props.includes('/*')){
-    var match = props.match(/\/\*.+\*\//)
+//     if (!comment.match(/.+:.+;/)) {
+//       if(props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)){
+//         comment = props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)[0].split('*/')[0] + '*/';
+//       }
+//     }
 
-    var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
+//     splitProps.push(comment);
+//     props = props.replace(comment,'');
+//   }
 
-    if (!comment.match(/.+:.+;/)) {
-      if(props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)){
-        comment = props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)[0].split('*/')[0] + '*/';
-      }
-    }
+//   splitProps = splitProps.map(function(prop){
+//     pair = [];
+//     pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
+//     pair[1] = prop.substring(prop.indexOf(':',0),prop.length).trim()
+//     return pair;
+//   })
 
-    splitProps.push(comment);
-    props = props.replace(comment,'');
-  }
+//   return splitProps.concat(props);
 
-  splitProps = splitProps.map(function(prop){
-    pair = [];
-    pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
-    pair[1] = prop.substring(prop.indexOf(':',0),prop.length).trim()
-    return pair;
-  })
-
-  return splitProps.concat(props);
-
-}
+// }
 
