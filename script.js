@@ -50,20 +50,31 @@ function sortRules(){
 
   var media = handleComments(rules.media)
   var mediaComments = media.comments;
+  media = media.rules
 
   var nonMedia = handleComments(rules.nonMedia)
   var nonMediaComments = nonMedia.comments;
+  nonMedia = nonMedia.rules;
 
-  rules = sortRulesSet(nonMedia.rules) + sortMediaRules(media.rules);
-  insertComments(rules, mediaComments.concat(nonMediaComments))
+  rules = sortRulesSet(nonMedia) + sortMediaRules(media);
+  rules = insertComments(rules, mediaComments.concat(nonMediaComments))
 
-  // console.log(nonMedia.match(/\/\*.commenting out font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif[^*/]+\*\//))
   $('#textarea').value = rules;
 }
 
-function insertComments(rules, comments){
-  console.log(comments)
+function insertComments(rules, commentArr){
+  commentArr = commentArr.forEach(function(coms){
+    coms = coms.forEach(function(com){
+      rules = rules.replace(com, '/*' + com + '*/')
+    })
+  })
+
+  return rules
 }
+
+RegExp.escape = function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
 
 function indent(){
   var indent = ' '.repeat($('#indent').value);
@@ -93,7 +104,6 @@ function sortRulesSet(rules){
 
 function createRulesArray(css){
   css = css.split('}');
-
   var rules = css.map(function(rule){
     var selector = rule.split('{')[0].trim();
     var props = rule.split('{')[1];
@@ -107,14 +117,6 @@ function createRulesArray(css){
   return rules;
 }
 
-// \/\*[^*/]+\*\/ -- catches non-bracketed comments
-
-// \/\*[^*/]+{(.*?)}(.*?)\*\/ -- catches commented rules
-
-// {[^}]+\/\*[^*/]+\*\/[^/*]+ -- catches comments in brackets
-
-
-
 function handleComments(rules){
   var rulesCopy = rules;
   var propComments = [];
@@ -124,10 +126,10 @@ function handleComments(rules){
   while ( rules.indexOf('/*') > 0  ){
     var lonerCom = rules.match(/\/\*[^*/]+\*\//);
     var familyCom = rules.match(/\/\*[^*/]+{(.*?)}(.*?)\*\//);
-    var propCom = rules.match(/{[^}]+\/\*[^*/]+\*\/[^/*]+/);
+    var propCom = rules.match(/{[^}]*(\/\*[^*/]*\*\/)/);
 
 
-    if (!!lonerCom){
+    if (!!lonerCom && !propCom){
       rules = rules.replace(lonerCom[0],'')
       rulesCopy = rulesCopy.replace(lonerCom[0],'');
     } 
@@ -135,15 +137,25 @@ function handleComments(rules){
     if ( !!familyCom ){
       familyComments.push(familyCom[0]);
       rules = rules.replace(familyCom[0],'');
-      rulesCopy = rulesCopy.replace(familyCom[0],'');
+      // rulesCopy = rulesCopy.replace(familyCom[0],'');
     }
 
     if (!!propCom) {
       propComments.push(propCom);
       rules = rules.replace(propCom[0],'');
-      rulesCopy = rulesCopy.replace(propCom[0],'');
     }
   }
+
+  propComments = propComments.map(function(coms){
+    coms = coms[0].split('/*')
+    coms.shift()
+    coms = coms.map(function(com){
+      com = com.substring(0,com.indexOf('*/'))
+      rulesCopy = rulesCopy.replace('/*' + com + '*/', com)
+      return com.trim()
+    })
+    return coms
+  })
 
   return { 'rules':rulesCopy, 'comments':propComments}
   
@@ -260,33 +272,3 @@ function bringUpTypeSelectors(rules){
   }
   
 }
-
-// function preservePropComments(props){
-
-//   var splitProps = [];
-//   while ( props.includes('/*')){
-//     var match = props.match(/\/\*.+\*\//)
-
-//     var comment = props.slice(match.index,props.indexOf('*/') + 2).trim();
-
-//     if (!comment.match(/.+:.+;/)) {
-//       if(props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)){
-//         comment = props.match(/\w+-?\w+:\s*\w+;\s*\/\*.+\*\/\s/)[0].split('*/')[0] + '*/';
-//       }
-//     }
-
-//     splitProps.push(comment);
-//     props = props.replace(comment,'');
-//   }
-
-//   splitProps = splitProps.map(function(prop){
-//     pair = [];
-//     pair[0] = prop.substring(0,prop.indexOf(':',0)).trim()
-//     pair[1] = prop.substring(prop.indexOf(':',0),prop.length).trim()
-//     return pair;
-//   })
-
-//   return splitProps.concat(props);
-
-// }
-
