@@ -80,16 +80,13 @@ function sortRules(){
 function insertComments(rules, commentArr){
   commentArr = commentArr.forEach(function(coms){
     coms = coms.forEach(function(com){
-      rules = rules.replace('___' + com, '/*' + com + '*/')
+      console.log(com)
+      rules = rules.replace(com[0] + com, '/*' + com + '*/')
     })
   })
 
-  return rules
+  return rules.replace('*/;','*/')
 }
-
-RegExp.escape = function(s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
 
 function indent(){
   var indent = ' '.repeat($('#indent').value);
@@ -139,10 +136,9 @@ function handleComments(rules){
   var familyComments = [];
 
   while ( rules.indexOf('/*') > -1  ){
-    var lonerCom = rules.match(/\/\*[^*/]+\*\//);
-    var familyCom = rules.match(/\/\*[^*/]+{(.*?)}(.*?)\*\//);
-    var propCom = rules.match(/{[^}]*(\/\*[^*][^/]*\*\/)/);
-    i++
+    var lonerCom = rules.match(/\/\*[^*]*[^/]*\*\//);
+    var familyCom = rules.match(/\/\*[^*][^/]{(.*?)}(.*?)\*\//);
+    var propCom = rules.match(/{[^}]*(\/\*[^*]*[^/]*\*\/)/);
 
     if (!!lonerCom && !propCom){
       rules = rules.replace(lonerCom[0],'')
@@ -166,7 +162,8 @@ function handleComments(rules){
     coms.shift()
     coms = coms.map(function(com){
       com = com.substring(0,com.indexOf('*/'))
-      rulesCopy = rulesCopy.replace('/*' + com + '*/', '___' + com.trim()) // flagging comments so similar rules aren't affected
+      rulesCopy = rulesCopy.replace('/*' + com + '*/', com[0] + com.trim() + ';') // flagging comments so similar rules aren't affected
+      // using substring to keep preserve sort
       com = com.trim()
       return com
     })
