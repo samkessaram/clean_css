@@ -8,80 +8,30 @@
 
 <header>Clean CSS</header>
 <div id="container">
-  <textarea id="textarea">body {
-    display: none;
-  background-color: #d7f0ea;
-
-}
-/* heading comment */
-
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-body {
-  /* commenting out font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; */
-  font-weight: 200; /* font weight comment here */
-}
-
-
-header {
-  background: linear-gradient(to right, $primaryColor, $secondaryColor);
-  /* no boxshadow box-shadow: 1px 1px 10px gray; */
-  color: $headlineTextColor;
-  padding: 50px 0px;
-  text-align: center;
-}
-
-
-
-html {
-  -webkit-text-size-adjust: none;
-}
-
-li {
+  <textarea id="textarea">
+#textarea {
+ /*resize: none;*/
+  /*Necessary to prevent some weird Mac bug that deletes a floated textarea on *input**/ 
   display: inline-block;
-  list-style: none;
-  margin-right: 30px;
-}
-
-p,
-li {
-  font-size: 1.25rem;
-}
-
-ul {
-  text-align: center;
-}
-
-
-@media {
-#home {
-  padding-top: 20px;
-}
-
-#about {
-  margin-bottom: 3rem;
-  margin-top: 2rem;
-}
-
-#contact {
-  margin-bottom: 20px;
-}}
-</textarea>
-
+  float: left;
+  font-family: monospace;
+  font-size: 1rem;
+  height: 500px;
+  min-width: 600px;
+  overflow: scroll;
+  text-align: left;
+}</textarea>
   <div id="options">
     <label for="indent">Indent (spaces):</label>
     <select name="indent" id="indent">
       <option selected value="2">2</option>
       <option value="4">4</option>
     </select>
+    <label for="preserveComments">Preserve Comments:</label>
+    <input type="checkbox" id="preserveComments" name="preserveComments">
     <button id="clean">Clean</button>
     <button id="revert">Revert</button>
-    <button id="rm-whitespace">No New Lines</button>
+    <!-- <button id="rm-whitespace">No New Lines</button> -->
     <button id="copy">Copy</button>
   </div>
 </div>

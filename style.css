@@ -15,9 +15,10 @@ button {
 header {
   display: inline-block;
   font-size: 3rem;
-  padding: 20px 0;
+  margin: 40px 0;
   text-align: left;
   width: 900px;
+  font-weight: 100;
 }
 
 ul li {
@@ -34,6 +35,10 @@ ul li {
 #indent {
   margin-left: 15px;
   width: 50px;
+}
+
+input {
+  margin-left: 15px;
 }
 
 #options {

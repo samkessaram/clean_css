@@ -24,27 +24,42 @@ $('#clean').onclick = function(){
   sortRules();
 }
 
-$('#indent').onchange = function(){ // change this to only auto adjust indent after initial sort 
-  sortRules();                      
-}
+// $('#indent').onchange = function(){ // change this to only auto adjust indent after initial sort 
+//   sortRules();                      
+// }
 
 $('#revert').onclick = function(){
   $('#textarea').value = uglyCss || $('#textarea').value;
 }
 
-$('#rm-whitespace').onclick = function(){
-  uglyCss = uglyCss || $('#textarea').value;
-  $('#textarea').value = $('#textarea').value.replace(/\n/g,'');
-}
+// $('#rm-whitespace').onclick = function(){
+//   uglyCss = uglyCss || $('#textarea').value;
+//   $('#textarea').value = $('#textarea').value.replace(/\n/g,'');
+// }
 
 $('#copy').onclick = function(){
   $('#textarea').select();
   document.execCommand('copy');
 }
 
+function deleteComments(rules){
+  rules = rules.split('/*');
+  rules = rules.map(function(el){
+    var i = el.indexOf('*/');
+    if (i > -1){
+      el = el.substring(i + 2,el.length)
+    };
+    return el
+  })
+  return rules.join('')
+}
+
 function sortRules(){
   var rules = $('#textarea').value;
   uglyCss = uglyCss || rules;
+  if (!$('#preserveComments').checked){
+    rules = deleteComments(rules)
+  }
   rules = rules.replace(/\n/g,'');
   rules = separateMediaQueries(rules);
 
@@ -65,7 +80,7 @@ function sortRules(){
 function insertComments(rules, commentArr){
   commentArr = commentArr.forEach(function(coms){
     coms = coms.forEach(function(com){
-      rules = rules.replace(com, '/*' + com + '*/')
+      rules = rules.replace('___' + com, '/*' + com + '*/')
     })
   })
 
@@ -119,15 +134,15 @@ function createRulesArray(css){
 
 function handleComments(rules){
   var rulesCopy = rules;
-  var propComments = [];
+  var savedComments = [];
   var lonerComments = [];
   var familyComments = [];
 
-  while ( rules.indexOf('/*') > 0  ){
+  while ( rules.indexOf('/*') > -1  ){
     var lonerCom = rules.match(/\/\*[^*/]+\*\//);
     var familyCom = rules.match(/\/\*[^*/]+{(.*?)}(.*?)\*\//);
-    var propCom = rules.match(/{[^}]*(\/\*[^*/]*\*\/)/);
-
+    var propCom = rules.match(/{[^}]*(\/\*[^*][^/]*\*\/)/);
+    i++
 
     if (!!lonerCom && !propCom){
       rules = rules.replace(lonerCom[0],'')
@@ -135,29 +150,30 @@ function handleComments(rules){
     } 
 
     if ( !!familyCom ){
-      familyComments.push(familyCom[0]);
+      // savedComments.push(familyCom[0]);
       rules = rules.replace(familyCom[0],'');
-      // rulesCopy = rulesCopy.replace(familyCom[0],'');
+      rulesCopy = rulesCopy.replace(familyCom[0],'');
     }
 
     if (!!propCom) {
-      propComments.push(propCom);
+      savedComments.push(propCom);
       rules = rules.replace(propCom[0],'');
     }
   }
 
-  propComments = propComments.map(function(coms){
+  savedComments = savedComments.map(function(coms){
     coms = coms[0].split('/*')
     coms.shift()
     coms = coms.map(function(com){
       com = com.substring(0,com.indexOf('*/'))
-      rulesCopy = rulesCopy.replace('/*' + com + '*/', com)
-      return com.trim()
+      rulesCopy = rulesCopy.replace('/*' + com + '*/', '___' + com.trim()) // flagging comments so similar rules aren't affected
+      com = com.trim()
+      return com
     })
     return coms
   })
 
-  return { 'rules':rulesCopy, 'comments':propComments}
+  return { 'rules':rulesCopy, 'comments':savedComments}
   
 }
 
@@ -165,7 +181,7 @@ function sortProps(rules){
   rules = rules.map(function(rule){
     var selector = rule[0];
     var props = rule[1];
-
+    console.log(props)
     props = props.sort(function(a,b){
       if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
         return -1
