@@ -14,11 +14,17 @@ button {
 
 header {
   display: inline-block;
-  font-size: 3rem;
+
   margin: 40px 0;
   text-align: left;
-  width: 900px;
+
+  
+}
+
+h1 {
   font-weight: 100;
+    width: 900px;
+      font-size: 3rem;
 }
 
 ul li {
@@ -61,4 +67,11 @@ input {
 
 .row {
   text-align: center;
+}
+
+@media only screen and (max-width: 768px){
+  #textarea {
+    width: 100%;
+    border: 1px solid black;
+  }
 }
