@@ -251,7 +251,7 @@ function trimProps(props){
 }
 
 function separateMediaQueries(rules){
-  rules = rules.split('@');
+  rules = rules.split('@media');
   var noMediaRules = rules[0];
   var mediaRules = rules.slice(1,rules.length);
 
@@ -267,7 +267,7 @@ function sortMediaRules(rules){
     rulesSet = rulesSet.replace(/\n/g,'\n' + indent());
     rulesSet = (rulesSet.substr(0,rulesSet.length - $('#indent').value - 1));
 
-    return '\n@' + query + ' {\n' + indent() + rulesSet + '\n}\n';
+    return '\n@media' + query + ' {\n' + indent() + rulesSet + '\n}\n';
   })
 
   return rules.join('');
