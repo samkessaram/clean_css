@@ -3,6 +3,7 @@
 <head>
   <title>Clean CSS</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta name="viewport" content="width=device-width initial-scale=1.0, user-scalable=yes">
 </head>
 <body>
@@ -12,18 +13,26 @@
   <textarea id="textarea">
 #example{/*resize: none;*/display: inline-block;overflow: scroll;text-align: left;font-family: monospace;font-size: 1rem;;float: left;}</textarea>
   <div id="options">
-    <label for="indent">Indent (spaces):</label>
-    <select name="indent" id="indent">
-      <option selected value="2">2</option>
-      <option value="4">4</option>
-    </select>
-    <label for="preserveComments">Preserve Comments:</label>
-    <input type="checkbox" id="preserveComments" name="preserveComments">
-    <button id="clean">Clean</button>
-    <button id="revert">Revert</button>
-    <!-- <button id="rm-whitespace">No New Lines</button> -->
-    <button id="copy">Copy</button>
+    <div>
+      <label for="indent">Indent (spaces):</label>
+      <select name="indent" id="indent">
+        <option selected value="2">2</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+    <div>
+      <label for="preserveComments">Preserve Comments*:</label>
+      <input type="checkbox" id="preserveComments" name="preserveComments">
+    </div>
+    <div>
+      <button id="clean">Clean</button>
+      <button id="revert">Revert</button>
+      <!-- <button id="rm-whitespace">No New Lines</button> -->
+      <button id="copy">Copy</button>
+    </div>
+      <p>*Only comments within rules will be preserved.</p>
   </div>
+<!--   <i class="fa fa-bath"></i> -->
 </div>
 <script type="text/javascript" src="script.js"></script>
 </body>
