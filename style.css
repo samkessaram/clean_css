@@ -36,8 +36,6 @@ h1 {
 }
 
 header {
-  padding: 0 75px;
-  text-align: left;
   width: 90%;
 }
 
@@ -118,9 +116,9 @@ ul li {
   }
   
   .fa {
-    font-size: 20rem;
+    font-size: 17rem;
     left: auto;
-    right: 10px;
+    right: 2rem;
     top: 10px;
     transform: scale(-1,1);
   }
