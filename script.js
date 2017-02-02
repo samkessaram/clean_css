@@ -109,7 +109,7 @@ function sortRulesSet(rules){
   rules = sortProps(rules);
   rules = joinRules(rules);
   rules = rules.sort();
-  rules = bringUpTypeSelectors(rules);
+  rules = bringUpSpecialSelectors(rules);
 
   return rules.join('\n');
 }
@@ -178,18 +178,20 @@ function sortProps(rules){
   rules = rules.map(function(rule){
     var selector = rule[0];
     var props = rule[1];
-    console.log(props)
-    props = props.sort(function(a,b){
-      if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
-        return -1
-      }
-      if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
-        return 1
-      }
-      if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
-        return 0
-      }
-    });
+
+    // props = props.sort(function(a,b){
+    //   if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
+    //     return -1
+    //   }
+    //   if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
+    //     return 1
+    //   }
+    //   if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
+    //     return 0
+    //   }
+    // });
+
+    props.sort()
 
     return rule;
   })
@@ -271,17 +273,38 @@ function sortMediaRules(rules){
   return rules.join('');
 }
 
-function bringUpTypeSelectors(rules){
+function bringUpSpecialSelectors(rules){
   var i = rules.findIndex(function(rule){
     return rule[0].match(/^[a-z]/)
   })
 
   if ( i > -1 ){
     var typeSelectors = rules.slice(i,rules.length);
-    rules.splice(i,typeSelectors.length);
-    return typeSelectors.concat(rules);
-  } else {
-    return rules
+    rules.splice(i,typeSelectors.length); // splice is destructive;
+    rules = typeSelectors.concat(rules);
   }
+
+  i = rules.findIndex(function(rule){
+    return rule.match(/^html/)
+  })
+
+  if ( i > -1 ){
+    var html = rules.slice(i,i+1);
+    rules.splice(i,html.length); // splice is destructive;
+    rules = html.concat(rules);
+  }
+
+  i = rules.findIndex(function(rule){
+    return rule.match(/^\*/)
+  })
+
+  if ( i > -1 ){
+    var universal = rules.slice(i,i+1);
+    rules.splice(i,universal.length); // splice is destructive;
+    rules = universal.concat(rules);
+  }
+
+
+  return rules
   
 }
