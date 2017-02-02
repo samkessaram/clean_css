@@ -179,19 +179,19 @@ function sortProps(rules){
     var selector = rule[0];
     var props = rule[1];
 
-    // props = props.sort(function(a,b){
-    //   if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
-    //     return -1
-    //   }
-    //   if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
-    //     return 1
-    //   }
-    //   if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
-    //     return 0
-    //   }
-    // });
+    // Custom alpha sort to preserve possible upcased comments
 
-    props.sort()
+    props = props.sort(function(a,b){
+      if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
+        return -1
+      }
+      if (a.toLowerCase().match(/\w+/)[0] > b.toLowerCase().match(/\w+/)[0]){
+        return 1
+      }
+      if (a.toLowerCase().match(/\w+/)[0] === b.toLowerCase().match(/\w+/)[0]){
+        return 0
+      }
+    });
 
     return rule;
   })

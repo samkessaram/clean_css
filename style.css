@@ -1,59 +1,44 @@
 * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
-
-
-#intro {
-  margin-bottom: 80px;
-  line-height: 1.8rem;
-
-}
 body,
 button {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: 300;
 }
-.fa {
-      position: absolute;
-    z-index: -1;
-    font-size: 50rem;
-    left: 20px;
-    color: #eaeaea;
-}
-button {
-background-color: white;
-    border-radius: 4px;
-    padding: 0 10px;
-    font-size: 0.75rem;
-    border: 1px solid gray;
-    text-transform: uppercase;
-    letter-spacing: .05rem;
-    height: 35px;
-    font-weight: 500;
-    transition-property: background-color;
-    transition-duration: .2s;
 
+button {
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  height: 35px;
+  letter-spacing: .05rem;
+  padding: 0 10px;
+  text-transform: uppercase;
+  transition-property: background-color;
+  transition-duration: .2s;
 }
 
 button:hover {
   background-color: black;
-  color: white;
   border-color: black;
-
-}
-
-header {
-  text-align: left;
-      padding: 0 75px;
-      width: 90%;
+  color: white;
 }
 
 h1 {
   font-weight: 100;
-      font-size: 6rem;
+  font-size: 6rem;
+}
+
+header {
+  padding: 0 75px;
+  text-align: left;
+  width: 90%;
 }
 
 ul li {
@@ -61,72 +46,82 @@ ul li {
   font-weight: 300;
 }
 
-#options {
-/*width: 200px;*/
-  display: inline-block;
-vertical-align: top;
-    position: relative;
-    margin-right: 25px;
-    text-align: left;
+#container {
+  padding: 0 3rem;
+}
+
+#intro {
+  line-height: 1.8rem;
+  margin-bottom: 80px;
 }
 
 #options div {
-  margin-top: 15px;
   display: block;
+  margin-top: 15px;
+}
+
+#options {
+  display: inline-block;
+  margin-right: 25px;
+  position: relative;
+  text-align: left;
+  vertical-align: top;
 }
 
 #textarea {
-  display: inline-block;
-
   border: 1px solid black;
+  display: inline-block;
   font-family: monospace;
   font-size: 1rem;
   height: 400px;
-  width: 600px;
-  overflow: scroll; /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input* */
+  /* Necessary to prevent some weird Mac bug that deletes a floated textarea on *input*; */
+  overflow: scroll;
   /*resize: none;*/
   text-align: left;
+  width: 600px;
 }
 
-#container {
-  padding: 0 3rem;
+.fa {
+  color: #eaeaea;
+  font-size: 50rem;
+  left: 20px;
+  position: absolute;
+  z-index: -1;
 }
 
 .row {
   text-align: center;
 }
 
-@media only screen and (max-width: 768px){
-  #textarea {
-    width: 100%;
-    height: 300px;
-
-
-  }
-
-  .fa {
-    transform: scale(-1,1);
-
-font-size: 20rem;
-    top: 10px;
-
-}
-  }
-
-
-
+@media only screen and (max-width: 768px) {
   header {
     padding: 0;
   }
-
-  #indent{
-        border: 1px solid gray;
+  
+  #indent {
+    border: 1px solid gray;
     padding: 3px;
   }
-
+  
+  #intro {
+    margin-bottom: auto;
+  }
+  
   #options {
-
-      margin: 10px 0 0;
     display: inline-block;
+    margin: 10px 0 0;
+  }
+  
+  #textarea {
+    height: 300px;
+    width: 100%;
+  }
+  
+  .fa {
+    font-size: 20rem;
+    left: auto;
+    right: 10px;
+    top: 10px;
+    transform: scale(-1,1);
   }
 }
