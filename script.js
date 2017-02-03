@@ -80,7 +80,6 @@ function sortRules(){
 function insertComments(rules, commentArr){
   commentArr = commentArr.forEach(function(coms){
     coms = coms.forEach(function(com){
-      console.log(com)
       rules = rules.replace(com[0] + com, '/*' + com + '*/')
     })
   })
@@ -227,18 +226,23 @@ function trimRules(rules){
 
     return [selector, props]
   })
-
+  console.log(rules)
   return rules
 }
 
 function trimProps(props){
   props = props.split(';')
   props = props.map(function(pair){
-    pair = pair.split(':');
-    pair = pair.map(function(half){
-      return half.trim()
-    })
-    return pair.join(': ')
+    if (pair[0] !== pair[1]){
+      pair = pair.split(':');
+      pair = pair.map(function(half){
+        return half.trim()
+      })
+      return pair.join(': ')
+    } else {
+      return pair
+    }
+    
   })
 
   props = props.filter(function(prop){
