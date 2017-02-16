@@ -226,13 +226,15 @@ function trimRules(rules){
 
     return [selector, props]
   })
-  console.log(rules)
+
   return rules
 }
 
 function trimProps(props){
   props = props.split(';')
+  
   props = props.map(function(pair){
+    pair = pair.trim()
     if (pair[0] !== pair[1]){
       pair = pair.split(':');
       pair = pair.map(function(half){
@@ -242,9 +244,8 @@ function trimProps(props){
     } else {
       return pair
     }
-    
   })
-
+  // console.log(props)
   props = props.filter(function(prop){
     if (!!prop){
       return prop;
