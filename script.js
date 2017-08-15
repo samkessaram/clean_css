@@ -1,4 +1,5 @@
-function $(elName){                   // jQuery-esque shortcut
+// Helper method for getting elements a lá jQuery
+function $(elName){
   el = findEl(elName)
   if ( el === null ){
     throw '"Element ' + elName + ' not found."';
@@ -18,6 +19,8 @@ function findEl(el){
   }
 }
 
+
+// Save original code for reversion option
 var uglyCss;
 
 $('#clean').onclick = function(){
@@ -56,7 +59,7 @@ function deleteComments(rules){
 
 function sortRules(){
   var rules = $('#textarea').value;
-  uglyCss = uglyCss || rules;
+  uglyCss = rules;
   if (!$('#preserveComments').checked){
     rules = deleteComments(rules)
   }
@@ -162,7 +165,7 @@ function handleComments(rules){
     coms = coms.map(function(com){
       com = com.substring(0,com.indexOf('*/'))
       rulesCopy = rulesCopy.replace('/*' + com + '*/', com[0] + com.trim() + ';') // flagging comments so similar rules aren't affected
-      // using substring to keep preserve sort
+      // using substring to keep preserve alpha value for sort
       com = com.trim()
       return com
     })
@@ -178,8 +181,8 @@ function sortProps(rules){
     var selector = rule[0];
     var props = rule[1];
 
-    // Custom alpha sort to preserve possible upcased comments
-
+    // Custom alpha sort to preserve possible upcased comments or properties
+    console.log(props)
     props = props.sort(function(a,b){
       if (a.toLowerCase().match(/\w+/)[0] < b.toLowerCase().match(/\w+/)[0]){
         return -1
@@ -245,7 +248,8 @@ function trimProps(props){
       return pair
     }
   })
-  // console.log(props)
+
+  // Filter nil properties
   props = props.filter(function(prop){
     if (!!prop){
       return prop;
@@ -279,6 +283,8 @@ function sortMediaRules(rules){
 }
 
 function bringUpSpecialSelectors(rules){
+
+  // Match and slice type selectors, bring to beginning of array
   var i = rules.findIndex(function(rule){
     return rule[0].match(/^[a-z]/)
   })
@@ -289,6 +295,7 @@ function bringUpSpecialSelectors(rules){
     rules = typeSelectors.concat(rules);
   }
 
+  // Match and slice 'html' selector, bring to beginning of array
   i = rules.findIndex(function(rule){
     return rule.match(/^html/)
   })
@@ -299,6 +306,7 @@ function bringUpSpecialSelectors(rules){
     rules = html.concat(rules);
   }
 
+  // Match and slice '*'' selector, bring to beginning of array
   i = rules.findIndex(function(rule){
     return rule.match(/^\*/)
   })
@@ -308,7 +316,6 @@ function bringUpSpecialSelectors(rules){
     rules.splice(i,universal.length); // splice is destructive;
     rules = universal.concat(rules);
   }
-
 
   return rules
   
